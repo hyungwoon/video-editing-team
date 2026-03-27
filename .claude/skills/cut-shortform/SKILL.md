@@ -38,6 +38,13 @@ SRT 파일이 없는 경우:
    - **모델 파일 없을 시**: `curl -L -o /tmp/ggml-large-v3.bin "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-large-v3.bin"`
 3. 생성된 SRT를 사용자에게 보여주고 수정 기회 제공
 
+4. **자막 다듬기** (SRT 제공 여부 무관, 항상 수행):
+   - 구어체 → 자연스러운 서면 한국어로 정리
+   - 고유명사 맥락 추론 및 교정 (예: "오픈에이아이" → "OpenAI")
+   - 말 더듬, 반복, 군더더기 제거
+   - 문장 재구성 (2줄 이내, 줄당 최대 32자)
+   - 다듬기 규칙 상세: `plugins/video-source/skills/subtitle-styling/SKILL.md` 참조
+
 ### Phase 2: 후킹 분석
 
 1. `agents/scriptwriter.md` 에이전트를 참조하여 분석 수행
