@@ -28,10 +28,14 @@ SRT 파일이 없는 경우:
    ```bash
    ffmpeg -i <video> -vn -acodec pcm_s16le -ar 16000 -ac 1 /tmp/audio.wav
    ```
-2. Whisper 로컬 실행:
+2. Whisper 로컬 실행 (Metal GPU 가속, large-v3 모델):
    ```bash
-   whisper /tmp/audio.wav --model medium --language ko --output_format srt --output_dir /tmp/
+   whisper-cli -m /tmp/ggml-large-v3.bin -f /tmp/audio.wav -l ko --output-srt -of /tmp/transcript
+   # 생성 파일: /tmp/transcript.srt
    ```
+   - **기본 모델**: `large-v3` (최고 한국어 정확도, 품질 최우선)
+   - **Metal GPU 가속**: whisper-cpp는 macOS에서 Metal 자동 활성 (`--no-gpu` 없으면 GPU 사용)
+   - **모델 파일 없을 시**: `curl -L -o /tmp/ggml-large-v3.bin "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-large-v3.bin"`
 3. 생성된 SRT를 사용자에게 보여주고 수정 기회 제공
 
 ### Phase 2: 후킹 분석
@@ -95,7 +99,8 @@ ffmpeg -i /tmp/joined.mp4 \
 ```bash
 ffmpeg -version | head -1
 ffmpeg -filters 2>&1 | grep ass
-which whisper || echo "Whisper 미설치 — SRT 파일을 직접 제공해주세요"
+which whisper-cli || echo "whisper-cpp 미설치 — brew install whisper-cpp"
+ls /tmp/ggml-large-v3.bin || echo "large-v3 모델 미다운로드"
 ```
 
 ## 출력 규격

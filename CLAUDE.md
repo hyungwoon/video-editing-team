@@ -28,7 +28,7 @@ ANTIEGG 숏폼 영상 제작 에이전트 팀. 촬영 영상과 텍스트 콘텐
 ## 기술 스택
 
 - **영상 편집**: FFmpeg (시스템 설치 필요)
-- **자막 생성**: Whisper 로컬 또는 사용자 SRT 제공
+- **자막 생성**: whisper-cpp (large-v3 모델, Metal GPU 가속) 또는 사용자 SRT 제공
 - **자막 스타일**: ASS 포맷 (ANTIEGG 디자인 가이드)
 - **텍스트→영상**: Remotion
 - **폰트**: SUIT Variable
