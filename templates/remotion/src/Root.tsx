@@ -4,6 +4,7 @@ import { ShortformComposition } from './ShortformComposition'
 import { StatsGrid } from './scenes/StatsGrid'
 import { LayerStack } from './scenes/LayerStack'
 import { AgentHub } from './scenes/AgentHub'
+import { ContentPipeline } from './scenes/ContentPipeline'
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -60,6 +61,14 @@ export const RemotionRoot: React.FC = () => {
       id="AgentHub"
       component={AgentHub}
       durationInFrames={180}
+      fps={30}
+      width={1080}
+      height={1920}
+    />
+    <Composition
+      id="ContentPipeline"
+      component={ContentPipeline}
+      durationInFrames={210}
       fps={30}
       width={1080}
       height={1920}
