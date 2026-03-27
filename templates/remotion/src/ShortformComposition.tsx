@@ -2,6 +2,8 @@ import React from 'react'
 import { AbsoluteFill, Sequence } from 'remotion'
 import { TextCard } from './scenes/TextCard'
 import { EndingCard } from './scenes/EndingCard'
+import { QuoteCard } from './scenes/QuoteCard'
+import { ListCard } from './scenes/ListCard'
 
 export interface Scene {
   type: 'text' | 'quote' | 'list' | 'ending'
@@ -16,6 +18,13 @@ interface Props {
   scenes: Scene[]
 }
 
+const SCENE_COMPONENTS = {
+  text: TextCard,
+  quote: QuoteCard,
+  list: ListCard,
+  ending: EndingCard,
+} as const
+
 export const ShortformComposition: React.FC<Props> = ({ scenes }) => {
   let currentFrame = 0
 
@@ -25,7 +34,7 @@ export const ShortformComposition: React.FC<Props> = ({ scenes }) => {
         const from = currentFrame
         currentFrame += scene.durationFrames
 
-        const Component = scene.type === 'ending' ? EndingCard : TextCard
+        const Component = SCENE_COMPONENTS[scene.type] || TextCard
 
         return (
           <Sequence key={index} from={from} durationInFrames={scene.durationFrames}>

@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "npx remotion studio",
-    "build": "npx remotion render src/index.ts ShortformComposition out/shortform.mp4",
+    "build": "npx remotion render src/index.ts ShortformComposition ../../output/shortform.mp4",
     "upgrade": "npx remotion upgrade"
   },
   "dependencies": {
