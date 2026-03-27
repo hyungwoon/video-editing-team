@@ -5,6 +5,8 @@ import { StatsGrid } from './scenes/StatsGrid'
 import { LayerStack } from './scenes/LayerStack'
 import { AgentHub } from './scenes/AgentHub'
 import { ContentPipeline } from './scenes/ContentPipeline'
+import { AudioSyncedComposition } from './AudioSyncedComposition'
+import { compositions } from './compositionData'
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -73,6 +75,18 @@ export const RemotionRoot: React.FC = () => {
       width={1080}
       height={1920}
     />
+    {compositions.map((comp) => (
+      <Composition
+        key={comp.id}
+        id={comp.id}
+        component={AudioSyncedComposition}
+        durationInFrames={Math.round(comp.props.totalSec * 30)}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={comp.props}
+      />
+    ))}
     </>
   )
 }
