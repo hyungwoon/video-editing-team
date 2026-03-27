@@ -90,41 +90,53 @@ SRT 파일이 없는 경우:
 - CEO Staff Agent System 가이드: https://site-flame-pi-11.vercel.app/guide
 - 5-Layer Architecture, Agent Hub, Plugin/Skill 구조 등 시각화 소스
 
-### Phase 4: 편집 실행
+### Phase 4: 소스 추출 (FFmpeg)
 
-1. `agents/editor.md` 에이전트를 참조하여 편집 지시서 생성
-2. FFmpeg 명령 순서:
+편집 지시서 확정 후, 원본 영상에서 필요한 소스를 추출:
 
 ```bash
-# 1. 구간별 컷
-ffmpeg -ss {start} -to {end} -i input.mov -c copy -avoid_negative_ts make_zero segment_1.mp4
-ffmpeg -ss {start} -to {end} -i input.mov -c copy -avoid_negative_ts make_zero segment_2.mp4
+# 오디오 추출 (전체 구간, 세그먼트 순서대로 concat)
+ffmpeg -ss {hook_start} -to {hook_end} -i input.mov \
+       -ss {context_start} -to {context_end} -i input.mov \
+       -filter_complex "[0:a][1:a]concat=n=2:v=0:a=1" \
+       -vn -c:a aac -b:a 128k audio.m4a
 
-# 2. concat 리스트 작성
-echo "file 'segment_1.mp4'" > /tmp/segments.txt
-echo "file 'segment_2.mp4'" >> /tmp/segments.txt
+# 화자 인트로 클립 (첫 3-4초, 1080x1920 패딩)
+ffmpeg -ss {start} -to {start+4} -i input.mov \
+  -vf "pad=1080:1920:0:150:black" -c:v libx264 -crf 18 -an intro.mp4
 
-# 3. concat
-ffmpeg -f concat -safe 0 -i /tmp/segments.txt -c copy /tmp/joined.mp4
-
-# 4. SRT → ASS 변환 (재조정된 타이밍)
-# 4-1. templates/subtitle.ass 의 [Script Info]와 [V4+ Styles] 섹션을 헤더로 복사
-# 4-2. editor 에이전트가 재조정한 타임코드로 [Events] 섹션 생성
-# 4-3. adjusted.ass 파일로 저장
-
-# 5. 자막 burn-in + 최종 인코딩
-ffmpeg -i /tmp/joined.mp4 \
-  -vf "ass=adjusted.ass:fontsdir=assets/font" \
-  -c:v libx264 -crf 18 -preset fast \
-  -c:a aac -b:a 128k \
-  -y output/shortform-{n}.mp4
+# 화자 아웃트로 클립 (마지막 3초)
+ffmpeg -ss {end-3} -to {end} -i input.mov \
+  -vf "pad=1080:1920:0:150:black" -c:v libx264 -crf 18 -an outro.mp4
 ```
 
-### Phase 4: 확인
+추출한 파일을 `templates/remotion/public/`에 복사.
+
+### Phase 5: Remotion 컴포지션 생성
+
+`AudioSyncedComposition` 기반으로 장면 정의:
+
+1. **인트로 (0~3-4초)**: `<OffthreadVideo>` 화자 영상
+2. **중간 (4~N-3초)**: Remotion 그래픽 장면들 — TextCard, LayerStack, StatsGrid, AgentHub, ContentPipeline 등 적극 활용
+3. **아웃트로 (N-3~N초)**: `<OffthreadVideo>` 화자 영상
+4. **자막**: `<SubtitleOverlay>` — SRT에서 다듬은 텍스트를 CSS 기반 자막으로 렌더 (완벽 오디오 싱크)
+
+`compositionData.ts`에 등록 또는 `--props`로 전달.
+
+### Phase 6: Remotion 렌더링
+
+```bash
+cd templates/remotion
+npx remotion render src/index.ts <CompositionId> ../../output/<name>.mp4
+```
+
+오디오, 그래픽, 자막이 **단일 렌더로 합성**됨. FFmpeg concat 불필요.
+
+### Phase 7: 확인
 
 1. 출력 파일 정보 표시:
    ```bash
-   ffprobe -v quiet -print_format json -show_format output/shortform-{n}.mp4
+   ffprobe -v quiet -print_format json -show_format output/<name>.mp4
    ```
 2. 파일 크기, 길이, 해상도 확인
 3. 사용자에게 결과 경로 안내
