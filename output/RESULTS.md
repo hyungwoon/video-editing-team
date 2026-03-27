@@ -3,7 +3,7 @@
 **소스**: 동영상 2026. 3. 27. 오후 6.08.mov (28분, ANTIEGG CEO 스태프 에이전트 시스템 사례)
 **생성일**: 2026-03-28
 **모델**: whisper-cpp large-v3-turbo (한국어)
-**자막**: 현재 자막 없는 버전 (libass 포함 FFmpeg 재설치 후 자막 burn-in 예정)
+**자막**: ANTIEGG 스타일 자막 burn-in 완료 (`*-sub.mp4`), 자막 없는 원본도 보존
 
 ## 후킹 시리즈 (3개)
 
@@ -61,7 +61,28 @@
 
 `output/preview.html`을 브라우저에서 열고 원본 영상을 드래그 앤 드롭하면 자막 포함 프리뷰 가능.
 
+## 파일 목록
+
+### 자막 burn-in 버전 (`*-sub.mp4`) — 최종본
+| 파일 | 크기 | 길이 |
+|------|------|------|
+| hook-001-ontology-sub.mp4 | 57MB | 58초 |
+| hook-002-feedback-loop-sub.mp4 | 57MB | 55초 |
+| hook-003-ceo-staff-sub.mp4 | 61MB | 63초 |
+| process-001-5layers-sub.mp4 | 49MB | 51초 |
+| process-002-ontology-sub.mp4 | 85MB | 87초 |
+| process-003-agent-team-sub.mp4 | 66MB | 67초 |
+
+### 자막 없는 원본 (참고용)
+| 파일 | 크기 | 길이 |
+|------|------|------|
+| hook-001-ontology.mp4 | 56MB | 58초 |
+| hook-002-feedback-loop.mp4 | 57MB | 55초 |
+| hook-003-ceo-staff.mp4 | 62MB | 63초 |
+| process-001-5layers.mp4 | 50MB | 51초 |
+| process-002-ontology.mp4 | 85MB | 87초 |
+| process-003-agent-team.mp4 | 66MB | 67초 |
+
 ## TODO
 
-- [ ] libass 포함 FFmpeg 재설치 후 ANTIEGG 스타일 자막 burn-in 버전 재제작
 - [ ] 프로세스 시리즈 추가 (브레인스토밍 게이트, RLVR 루프, 콘텐츠 파이프라인)
