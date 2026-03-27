@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ANTIEGG Shortform Preview</title>
+  <link href="https://cdn.jsdelivr.net/gh/sunn-us/SUIT/fonts/variable/woff2/SUIT-Variable.css" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #0a0a0a; color: #fff; font-family: 'SUIT Variable', sans-serif; }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+    h1 { font-size: 28px; margin-bottom: 8px; }
+    .subtitle { color: #888; font-size: 14px; margin-bottom: 40px; }
+
+    .series-group { margin-bottom: 48px; }
+    .series-title { font-size: 20px; font-weight: 700; margin-bottom: 16px; color: #FFD700; }
+
+    .clips { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 24px; }
+    .clip-btn {
+      padding: 10px 20px; border: 1px solid #333; border-radius: 8px;
+      background: #1a1a1a; color: #fff; cursor: pointer; font-family: inherit;
+      font-size: 14px; transition: all 0.2s;
+    }
+    .clip-btn:hover { border-color: #FFD700; background: #222; }
+    .clip-btn.active { border-color: #FFD700; background: #332900; color: #FFD700; }
+    .clip-info { font-size: 12px; color: #666; margin-top: 4px; }
+
+    .player-area {
+      display: flex; gap: 32px; align-items: flex-start;
+    }
+    .phone-frame {
+      width: 360px; height: 640px; background: #000; border-radius: 24px;
+      overflow: hidden; position: relative; flex-shrink: 0;
+      border: 2px solid #222;
+    }
+    video {
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    .caption-overlay {
+      position: absolute; bottom: 60px; left: 0; right: 0;
+      text-align: center; padding: 0 20px; pointer-events: none;
+    }
+    .caption-speaker {
+      font-size: 18px; font-weight: 700; color: #FFD700;
+      text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
+      margin-bottom: 4px;
+    }
+    .caption-text {
+      font-size: 24px; font-weight: 700; color: #fff; line-height: 1.38;
+      text-shadow: -3px -3px 0 #000, 3px -3px 0 #000, -3px 3px 0 #000, 3px 3px 0 #000, 0 0 12px rgba(0,0,0,0.9), 0 4px 16px rgba(0,0,0,0.7);
+    }
+
+    .details {
+      flex: 1; padding: 16px 0;
+    }
+    .detail-title { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+    .detail-score { color: #FFD700; font-size: 14px; margin-bottom: 16px; }
+    .detail-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .detail-table th { text-align: left; padding: 8px; border-bottom: 1px solid #333; color: #888; }
+    .detail-table td { padding: 8px; border-bottom: 1px solid #1a1a1a; }
+    .detail-table .timecode { font-family: monospace; color: #FFD700; }
+
+    .status { position: fixed; bottom: 20px; right: 20px; background: #1a1a1a; border: 1px solid #333; border-radius: 8px; padding: 12px 16px; font-size: 12px; color: #888; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>ANTIEGG Shortform Preview</h1>
+    <p class="subtitle">소스: 동영상 2026. 3. 27. (28분) · 6개 숏폼 프리뷰</p>
+
+    <div class="series-group">
+      <div class="series-title">🔥 후킹 시리즈 — 임팩트 한 문장으로 스크롤 멈추기</div>
+      <div class="clips">
+        <button class="clip-btn active" onclick="playClip(0)">
+          #1 온톨로지 = 장기 근속자
+          <div class="clip-info">점수 24/25 · 58초</div>
+        </button>
+        <button class="clip-btn" onclick="playClip(1)">
+          #2 피드백 루프
+          <div class="clip-info">점수 23/25 · 55초</div>
+        </button>
+        <button class="clip-btn" onclick="playClip(2)">
+          #3 CEO 스태프 시스템
+          <div class="clip-info">점수 22/25 · 58초</div>
+        </button>
+      </div>
+    </div>
+
+    <div class="series-group">
+      <div class="series-title">📋 프로세스 설명 시리즈 — 시스템 아키텍처 단계별 해설</div>
+      <div class="clips">
+        <button class="clip-btn" onclick="playClip(3)">
+          #1 5레이어 아키텍처
+          <div class="clip-info">51초</div>
+        </button>
+        <button class="clip-btn" onclick="playClip(4)">
+          #2 온톨로지 구축법
+          <div class="clip-info">87초</div>
+        </button>
+        <button class="clip-btn" onclick="playClip(5)">
+          #3 에이전트 팀 구조
+          <div class="clip-info">67초</div>
+        </button>
+      </div>
+    </div>
+
+    <div class="player-area">
+      <div class="phone-frame">
+        <video id="player" controls></video>
+        <div class="caption-overlay">
+          <div class="caption-speaker" id="speaker"></div>
+          <div class="caption-text" id="caption"></div>
+        </div>
+      </div>
+      <div class="details">
+        <div class="detail-title" id="detailTitle">클립을 선택하세요</div>
+        <div class="detail-score" id="detailScore"></div>
+        <table class="detail-table" id="detailTable">
+          <thead><tr><th>구간</th><th>타임코드</th><th>길이</th><th>내용</th></tr></thead>
+          <tbody id="detailBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="status" id="status">비디오 파일을 드래그하거나 아래 버튼으로 로드하세요</div>
+
+  <script>
+    const clips = [
+      {
+        title: '후킹 #1: 온톨로지 = AI 장기 근속자',
+        score: '24/25',
+        segments: [
+          { start: 283, end: 292, label: '후킹', desc: '"AI가 회사의 장기 근속자가 됩니다"' },
+          { start: 222, end: 271, label: '맥락', desc: '범용 LLM vs 에이전트 팀의 차이' },
+          { start: 292, end: 309, label: '클라이맥스', desc: '에이전트 17개 구축 시작' },
+        ],
+        captions: [
+          { t: 0, end: 4.5, text: '온톨로지를 구축하면\nAI가 회사의 장기 근속자가 됩니다' },
+          { t: 5, end: 9, text: '속속들이 모든 걸\n알게 되는 효과가 있어요' },
+          { t: 10, end: 15, text: 'Gemini나 GPT 같은 범용 LLM과\n에이전트 팀의 차이가 뭘까요?' },
+          { t: 15.5, end: 20, text: '바로 우리 회사의 맥락을\n알고 있느냐 아니냐입니다' },
+          { t: 20.5, end: 26, text: '온톨로지는 신입사원 온보딩처럼\n회사의 역사, 매출, 제품을 정리한 것' },
+          { t: 26.5, end: 32, text: '팀, 제품, 기술, 시장, 투자 상황\n로드맵, 고객 정보가 전부 포함됩니다' },
+          { t: 32.5, end: 37, text: '예전에는 온톨로지 구축이\n어렵고 수작업이 많았는데' },
+          { t: 37.5, end: 42, text: 'AI를 활용하면 마크다운 기반으로\n비교적 쉽게 구축이 가능합니다' },
+          { t: 42.5, end: 47, text: '옵시디언에 연결하면\n지식 그래프로도 볼 수 있어요' },
+          { t: 48, end: 53, text: '그래서 온톨로지를 먼저 구축하고\nCEO 스태프 에이전트 17개를 만들었습니다' },
+          { t: 53.5, end: 58, text: '실제 운영 중에 오퍼레이션 에이전트가\n추가되어 총 18개가 됐습니다' },
+        ]
+      },
+      {
+        title: '후킹 #2: 쓸수록 똑똑해지는 AI vs 매번 리셋',
+        score: '23/25',
+        segments: [
+          { start: 699, end: 705, label: '후킹', desc: '"매번 리셋되면 AI 쓸 이유가 없죠"' },
+          { start: 669, end: 699, label: '맥락', desc: '피드백 유형과 저장 방식' },
+          { start: 705, end: 724, label: '클라이맥스', desc: 'RLVR 피드백 루프 설명' },
+        ],
+        captions: [
+          { t: 0, end: 4.5, text: '쓰면 쓸수록 똑똑해져야 하는데\n매번 리셋되면 AI 쓸 이유가 없죠' },
+          { t: 5, end: 9, text: '에이전트 시스템을 구축하면\n피드백 루프가 핵심입니다' },
+          { t: 9.5, end: 13.5, text: '"숫자는 한 번 더 검증해"\n"이건 동의하지 않아"' },
+          { t: 14, end: 18, text: '이런 피드백들을\n여러 가지로 저장해놓습니다' },
+          { t: 18.5, end: 23, text: '한 번 지적한 것, 두 번, 세 번\n반복될수록 강하게 반영됩니다' },
+          { t: 23.5, end: 28, text: '가볍게 반영하기도 하고\n강력하게 반영하기도 합니다' },
+          { t: 28.5, end: 33, text: '피드백 루프를 잘 구축해놔야\n에이전트 시스템의 이득이 생깁니다' },
+          { t: 33.5, end: 38.5, text: '매일 다 알려줘야 하면\nAI와 일하는 이유가 없는 거예요' },
+          { t: 39, end: 44, text: 'RLVR 관점에서 검증 가능한\n보상 시그널을 계속 주면서' },
+          { t: 44.5, end: 49, text: '지식을 학습하는 루프를\n만들어 놓는 것이 중요합니다' },
+          { t: 49.5, end: 54, text: '쓸수록 격차가 만들어지고\n더 똑똑해지는 AI를 만드세요' },
+        ]
+      },
+      {
+        title: '후킹 #3: CEO의 모든 일을 AI 18개가 처리',
+        score: '22/25',
+        segments: [
+          { start: 64, end: 69, label: '후킹', desc: '"CEO의 일을 전부 다 도와주는 시스템"' },
+          { start: 45, end: 64, label: '맥락', desc: '에이전트 시스템 스펙 소개' },
+          { start: 69, end: 100, label: '스펙', desc: '18개 에이전트, 125개 스킬' },
+          { start: 116, end: 124, label: '클라이맥스', desc: '5개 레이어 아키텍처' },
+        ],
+        captions: [
+          { t: 0, end: 4.5, text: 'CEO의 일을 전부 다 도와주는\nAI 시스템을 만들었습니다' },
+          { t: 5, end: 9, text: '이 에이전트 시스템의 스펙이\n엄청나게 큽니다' },
+          { t: 9.5, end: 13.5, text: '에이전트 팀과 이 팀이 일하는\n하네스를 설계한 케이스입니다' },
+          { t: 14, end: 18.5, text: 'CEO 스태프 에이전트 시스템에는\n18개의 에이전트가 있습니다' },
+          { t: 19, end: 23, text: '125개의 스킬을 보유하고\n19개의 지식 문서가 있습니다' },
+          { t: 23.5, end: 28, text: '4가지 RLVR 루프로\n자가 학습까지 합니다' },
+          { t: 28.5, end: 33, text: '5개의 레이어를 통해\n업무를 수행합니다' },
+          { t: 33.5, end: 38, text: '규칙에 의해 에이전트가 움직이고\n각 에이전트가 스킬을 참조합니다' },
+          { t: 38.5, end: 43, text: '프로덕트, 마케팅, 파이낸스\n데이터, 세일즈, 리걸, HR' },
+          { t: 43.5, end: 48, text: 'CEO 스태프가 업무를 받으면\n적합한 에이전트에게 분배합니다' },
+          { t: 48.5, end: 53, text: '에이전트 허브 시스템으로\nCEO의 모든 업무를 처리합니다' },
+        ]
+      },
+      {
+        title: '프로세스 #1: 5레이어 아키텍처',
+        score: null,
+        segments: [
+          { start: 116, end: 167, label: '순차', desc: '규칙 → 에이전트 → 스킬 → 온톨로지 → 메모리' },
+        ],
+        captions: [
+          { t: 0, end: 4.5, text: 'CEO 스태프 에이전트는\n5개의 레이어로 일합니다' },
+          { t: 5, end: 10, text: '첫 번째, 규칙 레이어가\n에이전트의 행동을 제어합니다' },
+          { t: 10.5, end: 16, text: '두 번째, 각 AI 에이전트가\n규칙에 따라 움직입니다' },
+          { t: 16.5, end: 24, text: '세 번째, 스킬 플러그인\n재무, 디자인, 마케팅 등\n도메인별 전문 지식입니다' },
+          { t: 24.5, end: 32, text: '네 번째, 온톨로지\n기업의 역사와 자료가\n지식화된 문서입니다' },
+          { t: 32.5, end: 38, text: '12개의 팩트 기반 온톨로지와\n7개의 전략 분석 문서가 있습니다' },
+          { t: 38.5, end: 44, text: '다섯 번째, 메모리 레이어\n피드백을 기억하고 학습합니다' },
+          { t: 44.5, end: 50, text: '이 5개 레이어가 합쳐져\nAI가 업무를 수행합니다' },
+        ]
+      },
+      {
+        title: '프로세스 #2: 온톨로지 구축법',
+        score: null,
+        segments: [
+          { start: 205, end: 292, label: '순차', desc: 'LLM과의 차이 → 온톨로지 개념 → AI로 쉽게 구축' },
+        ],
+        captions: [
+          { t: 0, end: 4.5, text: '온톨로지 구축부터\n시작했습니다' },
+          { t: 5, end: 10, text: 'Gemini나 GPT 같은 범용 LLM도\n일은 잘 합니다' },
+          { t: 10.5, end: 16, text: '하지만 에이전트 팀과의 차이는\n회사 맥락을 아느냐 모르느냐입니다' },
+          { t: 16.5, end: 24, text: '온톨로지는 신입사원 온보딩처럼\n회사의 역사, 매출, 제품, 팀 정보를\n체계적으로 정리한 것입니다' },
+          { t: 24.5, end: 30, text: 'AI를 활용하면 마크다운 기반으로\n비교적 쉽게 구축할 수 있습니다' },
+          { t: 30.5, end: 35, text: '옵시디언에 연결하면\n지식 그래프로도 볼 수 있어요' },
+          { t: 35.5, end: 42, text: '구축하면 AI가 회사에서\n가장 오래 일한 사람처럼\n모든 걸 알게 됩니다' },
+        ]
+      },
+      {
+        title: '프로세스 #3: 에이전트 팀 구조',
+        score: null,
+        segments: [
+          { start: 302, end: 369, label: '순차', desc: '오케스트레이터 → 17 전문 에이전트 → 허브 시스템' },
+        ],
+        captions: [
+          { t: 0, end: 4.5, text: '17개 전문 에이전트와\n1개 오케스트레이터로 구성됩니다' },
+          { t: 5, end: 10, text: '오케스트레이터는 에이전트 팀의\n중심이 되는 존재입니다' },
+          { t: 10.5, end: 15, text: '오케스트라 지휘자처럼\n여러 에이전트가 협업하도록 조율합니다' },
+          { t: 15.5, end: 22, text: '그 아래에 프로덕트, 마케팅\n파이낸스, 데이터, 세일즈\n리걸, 리서치, HR이 있습니다' },
+          { t: 22.5, end: 28, text: 'CEO가 업무를 요청하면\nCEO 스태프가 먼저 받습니다' },
+          { t: 28.5, end: 34, text: 'CEO 스태프가 적합한 에이전트에게\n업무를 분배합니다' },
+          { t: 34.5, end: 40, text: '이렇게 에이전트 허브 시스템이\n만들어지게 됩니다' },
+          { t: 40.5, end: 47, text: '실제 업무를 받으면\n7단계를 거쳐 처리합니다' },
+        ]
+      }
+    ]
+
+    let currentClip = 0
+    let segmentIndex = 0
+    let segmentStartTime = 0
+    const player = document.getElementById('player')
+    const captionEl = document.getElementById('caption')
+    const speakerEl = document.getElementById('speaker')
+
+    // Drag and drop video file
+    document.body.addEventListener('dragover', e => { e.preventDefault(); e.stopPropagation() })
+    document.body.addEventListener('drop', e => {
+      e.preventDefault()
+      const file = e.dataTransfer.files[0]
+      if (file && file.type.startsWith('video/')) {
+        player.src = URL.createObjectURL(file)
+        document.getElementById('status').textContent = `로드됨: ${file.name}`
+        playClip(currentClip)
+      }
+    })
+
+    // Also support file input
+    const fileInput = document.createElement('input')
+    fileInput.type = 'file'
+    fileInput.accept = 'video/*'
+    fileInput.style.display = 'none'
+    document.body.appendChild(fileInput)
+    document.getElementById('status').innerHTML = '<button onclick="fileInput.click()" style="background:#333;color:#fff;border:1px solid #555;padding:6px 12px;border-radius:4px;cursor:pointer;font-family:inherit">비디오 파일 선택</button> 또는 드래그 앤 드롭'
+    fileInput.addEventListener('change', e => {
+      const file = e.target.files[0]
+      if (file) {
+        player.src = URL.createObjectURL(file)
+        document.getElementById('status').textContent = `로드됨: ${file.name}`
+        playClip(currentClip)
+      }
+    })
+
+    function playClip(index) {
+      currentClip = index
+      segmentIndex = 0
+      segmentStartTime = 0
+
+      // Update button states
+      document.querySelectorAll('.clip-btn').forEach((btn, i) => {
+        btn.classList.toggle('active', i === index)
+      })
+
+      // Update details
+      const clip = clips[index]
+      document.getElementById('detailTitle').textContent = clip.title
+      document.getElementById('detailScore').textContent = clip.score ? `후킹 점수: ${clip.score}` : '프로세스 설명'
+
+      const tbody = document.getElementById('detailBody')
+      tbody.innerHTML = clip.segments.map(seg => `
+        <tr>
+          <td>${seg.label}</td>
+          <td class="timecode">${formatTime(seg.start)} → ${formatTime(seg.end)}</td>
+          <td>${seg.end - seg.start}초</td>
+          <td>${seg.desc}</td>
+        </tr>
+      `).join('')
+
+      // Play first segment
+      if (player.src) {
+        playSegment()
+      }
+    }
+
+    function playSegment() {
+      const clip = clips[currentClip]
+      if (segmentIndex >= clip.segments.length) {
+        player.pause()
+        return
+      }
+      const seg = clip.segments[segmentIndex]
+      player.currentTime = seg.start
+      player.play()
+    }
+
+    player.addEventListener('timeupdate', () => {
+      const clip = clips[currentClip]
+      if (!clip) return
+
+      const seg = clip.segments[segmentIndex]
+      if (seg && player.currentTime >= seg.end) {
+        segmentStartTime += (seg.end - seg.start)
+        segmentIndex++
+        if (segmentIndex < clip.segments.length) {
+          playSegment()
+        } else {
+          player.pause()
+        }
+      }
+
+      // Update captions
+      const elapsed = segmentStartTime + (player.currentTime - (seg ? seg.start : 0))
+      const caption = clip.captions.find(c => elapsed >= c.t && elapsed < c.end)
+      if (caption) {
+        captionEl.textContent = caption.text
+        captionEl.style.display = ''
+      } else {
+        captionEl.textContent = ''
+      }
+    })
+
+    function formatTime(seconds) {
+      const m = Math.floor(seconds / 60)
+      const s = Math.floor(seconds % 60)
+      return `${m}:${String(s).padStart(2, '0')}`
+    }
+
+    // Init first clip
+    playClip(0)
+  </script>
+</body>
+</html>
