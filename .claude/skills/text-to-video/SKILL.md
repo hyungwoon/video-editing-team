@@ -1,6 +1,8 @@
 ---
 name: text-to-video
 description: 텍스트 콘텐츠를 Remotion 기반 세로형 숏폼 영상으로 변환한다. /text-to-video <text-file> 로 실행.
+user-invocable: true
+argument-hint: "<text-file>"
 ---
 
 # /text-to-video — 텍스트 → 숏폼 영상
@@ -79,3 +81,12 @@ cd templates/remotion && npm install
 - FPS: 30
 - 코덱: H.264
 - 길이: 45~75초
+
+## 에러 복구
+
+| 상황 | 원인 | 해결 |
+|------|------|------|
+| 폰트 로드 실패 | SUIT-Variable.woff2 누락 | `templates/remotion/public/` 에 파일 복사 확인 |
+| 컴포지션 길이 초과 | 장면 총 프레임 > 1800 | Root.tsx의 `durationInFrames`를 총 프레임에 맞게 조정 |
+| 렌더 OOM | 메모리 부족 | `--concurrency=1` 플래그 추가 |
+| 렌더 실패 | node_modules 미설치 | `cd templates/remotion && npm install` |

@@ -32,7 +32,7 @@ ANTIEGG 숏폼 영상 제작 에이전트 팀. 촬영 영상과 텍스트 콘텐
 - **자막 스타일**: ASS 포맷 (ANTIEGG 디자인 가이드)
 - **텍스트→영상**: Remotion
 - **폰트**: SUIT Variable
-- **브랜드**: ANTIEGG (`antiegg-shortform-templates` 레포 참조)
+- **브랜드**: ANTIEGG ([antiegg-shortform-templates](https://github.com/hyungwoon/antiegg-shortform-templates) 레포 참조)
 
 ## 브랜드 자막 스타일
 
@@ -43,6 +43,10 @@ ANTIEGG 숏폼 영상 제작 에이전트 팀. 촬영 영상과 텍스트 콘텐
 | 폰트 | SUIT Variable |
 | 외곽선 | #000000, 3px |
 | 그림자 | 0px 4px 16px rgba(0,0,0,0.7) |
+
+## 참고 문서
+
+- `docs/plans/` — 설계 및 구현 계획 문서
 
 ## 압축(Compaction) 시 보존 지시
 
