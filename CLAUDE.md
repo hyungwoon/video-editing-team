@@ -47,6 +47,7 @@ ANTIEGG 숏폼 영상 제작 에이전트 팀. 촬영 영상과 텍스트 콘텐
 ## 참고 문서
 
 - `docs/plans/` — 설계 및 구현 계획 문서
+- CEO Staff Agent System 가이드: https://site-flame-pi-11.vercel.app/guide
 
 ## 압축(Compaction) 시 보존 지시
 
