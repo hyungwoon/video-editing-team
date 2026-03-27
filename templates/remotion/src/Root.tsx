@@ -1,9 +1,13 @@
 import React from 'react'
 import { Composition } from 'remotion'
 import { ShortformComposition } from './ShortformComposition'
+import { StatsGrid } from './scenes/StatsGrid'
+import { LayerStack } from './scenes/LayerStack'
+import { AgentHub } from './scenes/AgentHub'
 
 export const RemotionRoot: React.FC = () => {
   return (
+    <>
     <Composition
       id="ShortformComposition"
       component={ShortformComposition}
@@ -36,5 +40,30 @@ export const RemotionRoot: React.FC = () => {
         ],
       }}
     />
+    <Composition
+      id="StatsGrid"
+      component={StatsGrid}
+      durationInFrames={150}
+      fps={30}
+      width={1080}
+      height={1920}
+    />
+    <Composition
+      id="LayerStack"
+      component={LayerStack}
+      durationInFrames={180}
+      fps={30}
+      width={1080}
+      height={1920}
+    />
+    <Composition
+      id="AgentHub"
+      component={AgentHub}
+      durationInFrames={180}
+      fps={30}
+      width={1080}
+      height={1920}
+    />
+    </>
   )
 }
