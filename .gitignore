@@ -1,0 +1,7 @@
+node_modules/
+output/*.mp4
+output/*.ass
+output/*.srt
+.DS_Store
+*.log
+templates/remotion/.remotion/
