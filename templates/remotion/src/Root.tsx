@@ -5,6 +5,10 @@ import { StatsGrid } from './scenes/StatsGrid'
 import { LayerStack } from './scenes/LayerStack'
 import { AgentHub } from './scenes/AgentHub'
 import { ContentPipeline } from './scenes/ContentPipeline'
+import { OntologyGrid } from './scenes/OntologyGrid'
+import { ProcessFlow } from './scenes/ProcessFlow'
+import { ComparisonDiagram } from './scenes/ComparisonDiagram'
+import { FeedbackLoop } from './scenes/FeedbackLoop'
 import { AudioSyncedComposition } from './AudioSyncedComposition'
 import { compositions } from './compositionData'
 
@@ -71,6 +75,38 @@ export const RemotionRoot: React.FC = () => {
       id="ContentPipeline"
       component={ContentPipeline}
       durationInFrames={210}
+      fps={30}
+      width={1080}
+      height={1920}
+    />
+    <Composition
+      id="OntologyGrid"
+      component={OntologyGrid}
+      durationInFrames={180}
+      fps={30}
+      width={1080}
+      height={1920}
+    />
+    <Composition
+      id="ProcessFlow"
+      component={ProcessFlow}
+      durationInFrames={210}
+      fps={30}
+      width={1080}
+      height={1920}
+    />
+    <Composition
+      id="ComparisonDiagram"
+      component={ComparisonDiagram}
+      durationInFrames={180}
+      fps={30}
+      width={1080}
+      height={1920}
+    />
+    <Composition
+      id="FeedbackLoop"
+      component={FeedbackLoop}
+      durationInFrames={180}
       fps={30}
       width={1080}
       height={1920}

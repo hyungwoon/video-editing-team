@@ -15,10 +15,14 @@ import { StatsGrid } from './scenes/StatsGrid'
 import { LayerStack } from './scenes/LayerStack'
 import { AgentHub } from './scenes/AgentHub'
 import { ContentPipeline } from './scenes/ContentPipeline'
+import { OntologyGrid } from './scenes/OntologyGrid'
+import { ProcessFlow } from './scenes/ProcessFlow'
+import { ComparisonDiagram } from './scenes/ComparisonDiagram'
+import { FeedbackLoop } from './scenes/FeedbackLoop'
 import { SubtitleOverlay, SubtitleEntry } from './scenes/SubtitleOverlay'
 
 export interface SceneDef {
-  type: 'text' | 'quote' | 'list' | 'ending' | 'stats' | 'layers' | 'agenthub' | 'pipeline'
+  type: 'text' | 'quote' | 'list' | 'ending' | 'stats' | 'layers' | 'agenthub' | 'pipeline' | 'ontologyGrid' | 'processFlow' | 'comparison' | 'feedbackLoop'
   startSec: number
   endSec: number
   text?: string
@@ -46,6 +50,10 @@ const SCENE_MAP: Record<string, React.FC<any>> = {
   layers: LayerStack,
   agenthub: AgentHub,
   pipeline: ContentPipeline,
+  ontologyGrid: OntologyGrid,
+  processFlow: ProcessFlow,
+  comparison: ComparisonDiagram,
+  feedbackLoop: FeedbackLoop,
 }
 
 export const AudioSyncedComposition: React.FC<AudioSyncedProps> = ({
