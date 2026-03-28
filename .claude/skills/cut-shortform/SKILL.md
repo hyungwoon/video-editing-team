@@ -84,7 +84,7 @@ SRT 파일이 없는 경우:
 1. 스크립트에서 시각화가 필요한 구간 식별
 2. Remotion으로 해당 내용의 그래픽 컴포지션 생성 (다이어그램, 리스트, 플로우차트)
 3. 렌더링하여 그래픽 클립 생성
-4. FFmpeg로 원본 영상과 교차 편집: 화자 → 그래픽 → 화자 → 그래픽
+4. Remotion `<Sequence>` 블록으로 인트로/그래픽/아웃트로 교차 편집
 
 **참고 콘텐츠:**
 - CEO Staff Agent System 가이드: https://site-flame-pi-11.vercel.app/guide
@@ -117,7 +117,7 @@ ffmpeg -ss {end-3} -to {end} -i input.mov \
 `AudioSyncedComposition` 기반으로 장면 정의:
 
 1. **인트로 (0~3-4초)**: `<OffthreadVideo>` 화자 영상
-2. **중간 (4~N-3초)**: Remotion 그래픽 장면들 — TextCard, LayerStack, StatsGrid, AgentHub, ContentPipeline 등 적극 활용
+2. **중간 (4~N-3초)**: Remotion 그래픽 장면들 — 12개 타입: text, quote, list, ending, stats, layers, agenthub, pipeline, ontologyGrid, processFlow, comparison, feedbackLoop
 3. **아웃트로 (N-3~N초)**: `<OffthreadVideo>` 화자 영상
 4. **자막**: `<SubtitleOverlay>` — SRT에서 다듬은 텍스트를 CSS 기반 자막으로 렌더 (완벽 오디오 싱크)
 
@@ -146,7 +146,6 @@ npx remotion render src/index.ts <CompositionId> ../../output/<name>.mp4
 파이프라인 시작 전 확인:
 ```bash
 ffmpeg -version | head -1
-ffmpeg -filters 2>&1 | grep ass
 which whisper-cli || echo "whisper-cpp 미설치 — brew install whisper-cpp"
 ls /tmp/ggml-large-v3.bin || echo "large-v3 모델 미다운로드"
 ```
@@ -163,7 +162,8 @@ ls /tmp/ggml-large-v3.bin || echo "large-v3 모델 미다운로드"
 
 | 상황 | 원인 | 해결 |
 |------|------|------|
-| segment 컷 실패 `Invalid data` | 키프레임 불일치 | `-c copy` 대신 `-c:v libx264 -c:a aac`로 재인코딩 |
-| concat 실패 | 세그먼트 코덱 불일치 | `ffprobe`로 각 세그먼트 코덱 확인 후 통일 |
-| ASS burn-in 실패 | libass 미지원 또는 폰트 미설치 | `ffmpeg -filters \| grep ass` 확인, `fontsdir` 경로에 SUIT-Bold.ttf 확인 |
-| 출력 0바이트 | 입력 파일 손상 | `ffprobe`로 입력 파일 무결성 검증 |
+| 소스 추출 실패 | FFmpeg 입력 파일 문제 | `ffprobe`로 입력 파일 무결성 검증 |
+| Remotion 렌더 실패 | 컴포지션 미등록 | `npx remotion compositions src/index.ts`로 ID 확인 |
+| 폰트 로드 실패 | SUIT-Variable.woff2 누락 | `templates/remotion/public/`에 파일 확인 |
+| 렌더 OOM | 메모리 부족 | `--concurrency=1` 플래그 추가 |
+| 출력 0바이트 | 오디오/비디오 소스 누락 | `public/` 폴더에 audio.m4a, intro.mp4, outro.mp4 존재 확인 |

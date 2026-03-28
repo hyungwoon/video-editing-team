@@ -31,7 +31,7 @@ ANTIEGG 숏폼 영상 제작 에이전트 팀. 촬영 영상과 텍스트 콘텐
 - **소스 추출**: FFmpeg (오디오/인트로/아웃트로 클립 추출용)
 - **자막 생성**: whisper-cpp (large-v3 모델, Metal GPU 가속) 또는 사용자 SRT 제공
 - **자막 렌더링**: Remotion SubtitleOverlay (CSS 기반, 완벽 오디오 싱크)
-- **그래픽**: Remotion 장면 컴포넌트 (TextCard, LayerStack, StatsGrid, AgentHub, ContentPipeline)
+- **그래픽**: Remotion 장면 컴포넌트 12종 (TextCard, QuoteCard, ListCard, EndingCard, StatsGrid, LayerStack, AgentHub, ContentPipeline, OntologyGrid, ProcessFlow, ComparisonDiagram, FeedbackLoop)
 - **폰트**: SUIT Variable
 - **브랜드**: ANTIEGG ([antiegg-shortform-templates](https://github.com/hyungwoon/antiegg-shortform-templates) 레포 참조)
 
@@ -51,6 +51,8 @@ ANTIEGG 숏폼 영상 제작 에이전트 팀. 촬영 영상과 텍스트 콘텐
 - `templates/remotion/src/compositionData.ts` — 8개 숏폼 장면/자막 정의
 - `templates/remotion/src/AudioSyncedComposition.tsx` — 핵심 컴포지션
 - CEO Staff Agent System 가이드: https://site-flame-pi-11.vercel.app/guide
+- 컴포지션 ID: Hook001~004, Process001~004
+- 레거시: `scripts/generate-ass.py` (SRT→ASS), `templates/subtitle.ass`, `ShortformComposition.tsx`
 
 ## 압축(Compaction) 시 보존 지시
 
