@@ -38,23 +38,28 @@ argument-hint: "<text-file>"
 2. `templates/remotion/` 프로젝트 기반
 3. 스크립트의 각 장면 → React 컴포넌트 매핑:
 
-| 장면 타입 | 컴포넌트 |
-|-----------|----------|
-| 후킹 텍스트 | `TextCard` (큰 글씨, 타이핑) |
-| 인사이트 | `TextCard` (강조 키워드) |
-| 인용문 | `QuoteCard` |
-| 리스트 | `ListCard` |
-| CTA/엔딩 | `EndingCard` |
+| 장면 타입 | 컴포넌트 | 용도 |
+|-----------|----------|------|
+| 후킹 텍스트 | `text` (TextCard) | 큰 글씨, 펀치라인 |
+| 인사이트 | `text` (TextCard) | 강조 키워드 |
+| 인용문 | `quote` (QuoteCard) | 따옴표 인용 |
+| 리스트 | `list` (ListCard) | 항목 나열 |
+| 숫자/스펙 | `stats` (StatsGrid) | 데이터 시각화 |
+| 아키텍처 | `layers` (LayerStack) | 구조 다이어그램 |
+| 비교 | `comparison` (ComparisonDiagram) | A vs B |
+| 프로세스 | `processFlow` (ProcessFlow) | 단계 흐름 |
+| 순환 구조 | `feedbackLoop` (FeedbackLoop) | 반복 루프 |
+| CTA/엔딩 | `ending` (EndingCard) | ANTIEGG 브랜딩 |
 
 4. 컴포지션 코드 생성 또는 inputProps로 전달
+
+**참고:** 텍스트 기반 영상도 `AudioSyncedComposition`을 사용할 수 있다. TTS 오디오를 생성하면 오디오 싱크 그래픽 영상이 가능. TTS 없이 텍스트만으로는 `ShortformComposition` (레거시)도 사용 가능하지만 다이어그램 타입이 4개로 제한됨.
 
 ### Phase 3: 렌더링
 
 ```bash
 cd templates/remotion
-npx remotion render src/index.ts ShortformComposition \
-  --props='{"scenes": [...]}' \
-  ../../output/text-shortform-{n}.mp4
+npx remotion render src/index.ts <CompositionId> ../../output/text-shortform-{n}.mp4
 ```
 
 ### Phase 4: 확인
