@@ -5,3 +5,7 @@ output/*.srt
 .DS_Store
 *.log
 templates/remotion/.remotion/
+
+# Remotion media assets
+templates/remotion/public/*.mp4
+templates/remotion/public/*.m4a
